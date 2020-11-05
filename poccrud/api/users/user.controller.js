@@ -9,16 +9,25 @@ const {create,
     } = require('./user.service');
 
     
-
+const logger = require("../../.auth/logger");
 const {genSaltSync, hashSync, compareSync ,genSalt} = require('bcrypt');
 const {sign} = require('jsonwebtoken');
 const { json } = require('express');
-module.exports ={
+const express = require ("express");
+const app = express();
+const winston = require('winston');
+
+app.use(function(req, res, next){
+
+});
+
+module.exports ={  
     createUser: (req, res) => {
         const body = req.body;
         const salt = genSaltSync(10);
         body.password = hashSync(body.password, salt);
         create(body, (err, results)=> {
+            logger.log('info', 'a new user is created');
             if (err) {
                 console.log(err);
                 return res.status(500).json({
@@ -36,6 +45,7 @@ module.exports ={
     getUserById: (req,res) => {
         const id = req.params.id;
         getUserById(id, (err, results) => {
+            logger.log('info', 'a new user is get by ID');
             if (err) {
                 console.log(err);
                 return;
@@ -57,6 +67,7 @@ module.exports ={
     getUserByIdSp: (req,res) => {
         const id = req.params.id;
         getUserByIdSp(id, (err, results) => {
+            logger.log('info', 'users are coming from SP');
             if (err) {
                 console.log(err);
                 return;
@@ -81,6 +92,7 @@ module.exports ={
 
     getUsers: (req, res) => {
         getUsers((err, results) => {
+            logger.log('info', 'all users');
             if (err) {
                 console.log(err);
                 return;
@@ -97,6 +109,7 @@ module.exports ={
         const salt = genSaltSync(10);
         body.password = hashSync(body.password , salt);
         updateUser(body, (err, results) => {
+            logger.log('info', 'user is updated');
             if (err) {
                 console.log(err);
                 return false;               
@@ -117,6 +130,7 @@ module.exports ={
     deleteUser: (req, res) => {
         const data = req.body;
         deleteUser(data, (err, results) => {
+            logger.log('info', 'user is Deleted');
             if (err) {
                 console.log(err);
                 return;
@@ -124,7 +138,7 @@ module.exports ={
             if(!results){
                 return res.json({
                     success: 0,
-                    message:'record not found'
+                    message:'deleted'
                 });
             }
             return res.json({
@@ -137,6 +151,7 @@ module.exports ={
     login:(req,res) => {
         const body = req.body;
         getUserByEmail(body.email, (err, results) => {
+            logger.log('info', 'user Loggedin');
             if (err) {
                 console.log(err);
              }
@@ -153,6 +168,7 @@ module.exports ={
                  const jsontoken = sign({result: results}, process.env.tkey, {
                   expiresIn:"1h"         
                  });
+                 logger.log('info', 'lOGGED IN SUCCESSFULLY');
                  return res.json({
                     success: 1,
                      message: "login successfull",

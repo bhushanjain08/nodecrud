@@ -9,6 +9,4 @@ function authRole(role) {
 
 }
 
-module.exports = {
-    authRole
-}
+module.exports = {authRole}

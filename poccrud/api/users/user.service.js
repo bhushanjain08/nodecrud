@@ -3,14 +3,18 @@ const mysqlConnection = require("../../config/database");
 module.exports = {
     create: (data, callback) => {
         mysqlConnection.query(
-            'insert into registration(firstName, lastName, gender, email, password, number)values(?,?,?,?,?,? )',
+            'CALL crud(?,?,?,?,?,?,?,?,"Insert")',
+           // 'insert into registration(firstName, lastName, gender, email, password, number)values(?,?,?,?,?,? )',
            [
+            data.id,   
             data.firstName,
             data.lastName,
             data.gender,
             data.email,
             data.password,
-            data.number
+            data.number,
+            data.role,
+            data.choice
            ],
            (error, results, fields) => {
                if (error) {
@@ -77,15 +81,26 @@ module.exports = {
 
     updateUser: (data, callback) => {
         mysqlConnection.query(
-            'update registration set firstName=?, lastName=?, gender=?, email=?, password=?, number=? where id=?',
+            'CALL crud(?,?,?,?,?,?,?,?,"Update")',
+
+           // 'update registration set firstName=?, lastName=?, gender=?, email=?, password=?, number=? where id=?',
            [
+            // data.firstName,
+            // data.lastName,
+            // data.gender,
+            // data.email,
+            // data.password,
+            // data.number,
+            // data.id
+            data.id,   
             data.firstName,
             data.lastName,
             data.gender,
             data.email,
             data.password,
             data.number,
-            data.id
+            data.role,
+            data.choice
            ],
            (error, results, fields) => {
                if (error) {
@@ -98,8 +113,21 @@ module.exports = {
 
     deleteUser: (data, callback) => {
         mysqlConnection.query(
-            'delete from registration where id = ?',
-            [data.id],
+            'CALL crud(?,?,?,?,?,?,?,?,"Delete")',
+
+           // 'delete from registration where id = ?',
+            [
+                //data.id,
+            data.id,   
+            data.firstName,
+            data.lastName,
+            data.gender,
+            data.email,
+            data.password,
+            data.number,
+            data.role,
+            data.choice
+            ],
             (error, results, fields) => {
                 if (error) {
                     return callback(error);
